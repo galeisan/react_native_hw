@@ -1,5 +1,5 @@
-import React from 'react';
-import {View, Text, Button} from 'react-native';
+import React, { useEffect } from "react";
+import { View, Text, Button, Linking } from "react-native";
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -7,7 +7,8 @@ import SettingsScreen from "./screens/SettingsScreen";
 import NewsScreen from "./screens/NewsScreen";
 import ChatScreen from "./screens/ChatScreen";
 import HomeScreen from "./screens/HomeScreen";
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import Navigation from "./navigation/Navigation";
+import { DeepLinking } from "./navigation/DeepLinking";
 
 
 const Tab = createBottomTabNavigator();
@@ -15,24 +16,10 @@ const Stack = createNativeStackNavigator();
 const TabNavigation = () => {
   return (
     <Tab.Navigator>
-      <Tab.Screen name="Home" component={HomeStack} options={{headerShown: false, tabBarIcon: ({ focused }) => (
-          <Ionicons name="home"  size={28} />
-        ),}} />
-      <Tab.Screen name="News" component={NewsScreen} options={{
-        tabBarIcon: ({ focused }) => (
-          <Ionicons name="newspaper"  size={28} />
-        ),
-      }}/>
-      <Tab.Screen name="Chat" component={ChatScreen} options={{
-        tabBarIcon: ({ focused }) => (
-          <Ionicons name="chatbox" size={28} />
-        ),
-      }}/>
-      <Tab.Screen name="Settings" component={SettingsScreen} options={{
-        tabBarIcon: ({ focused }) => (
-          <Ionicons name="server" size={28} />
-        ),
-      }}/>
+      <Tab.Screen name="Home" component={HomeStack} />
+      <Tab.Screen name="News" component={NewsScreen} />
+      <Tab.Screen name="Chat" component={ChatScreen} />
+      <Tab.Screen name="Settings" component={SettingsScreen} />
     </Tab.Navigator>
   );
 }
@@ -54,12 +41,29 @@ const HomeStack = () => {
     </Stack.Navigator>
   );
 }
-export default function App() {
+
+const App = () => {
+  useEffect(() => {
+    Linking.getInitialURL().then(async (deepLinkInitialURL: any) => {
+      if (deepLinkInitialURL) {
+        await DeepLinking.handleInitialNavigate(deepLinkInitialURL);
+      }
+    });
+  }, []);
+
   return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name={'Tab'} component={TabNavigation} options={{headerShown: false}} />
-      </Stack.Navigator>
-    </NavigationContainer>
-  )
-}
+      <NavigationContainer
+        linking={DeepLinking.linking}
+        ref={Navigation.navigationRef}>
+        <Stack.Navigator>
+          <Stack.Screen
+            name={'Tab'}
+            component={TabNavigation}
+            options={{headerShown: false}}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+  );
+};
+
+export default App;
