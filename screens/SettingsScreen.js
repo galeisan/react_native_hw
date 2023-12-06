@@ -1,13 +1,15 @@
-import { StyleSheet, Button, Text, View } from "react-native";
+import {StyleSheet, Button, Text, View} from 'react-native';
+import {useTranslation} from 'react-i18next';
 
-export default function SettingsScreen({ navigation }) {
+export default function SettingsScreen({navigation}) {
+  const {t} = useTranslation();
 
   return (
     <View style={styles.container}>
-      <Text>Settings</Text>
+      <Text>{t('main.screens.settings')}</Text>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {

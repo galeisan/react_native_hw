@@ -1,13 +1,15 @@
-import { StyleSheet, Button, Text, View } from "react-native";
+import {StyleSheet, Button, Text, View} from 'react-native';
+import {useTranslation} from 'react-i18next';
 
-export default function NewsScreen({ navigation }) {
+export default function NewsScreen({navigation}) {
+  const {t} = useTranslation();
 
   return (
     <View style={styles.container}>
-      <Text>News</Text>
+      <Text>{t('main.screens.news')}</Text>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {

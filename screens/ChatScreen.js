@@ -1,13 +1,15 @@
-import { StyleSheet, Button, Text, View } from "react-native";
+import {StyleSheet, Button, Text, View} from 'react-native';
+import {useTranslation} from 'react-i18next';
 
-export default function ChatScreen({ navigation }) {
+export default function ChatScreen({navigation}) {
+  const {t} = useTranslation();
 
   return (
     <View style={styles.container}>
-      <Text>Chat</Text>
+      <Text>{t('main.screens.chat')}</Text>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
