@@ -12,12 +12,15 @@
     },
     "screens": {
       "home": {
-        "title": "Home Screen",
-        "button": "Change language"
+        "title": "Home Screen"
       },
       "chat": "Chat Screen",
       "news": "News Screen",
-      "settings": "Settings Screen",
+      "settings": {
+        "title": "Settings Screen",
+        "buttonLanguage": "Change language",
+        "buttonTheme": "Change theme"
+      },
       "about": "About Our App: Nothing"
     }
   }

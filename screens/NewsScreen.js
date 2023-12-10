@@ -1,32 +1,37 @@
-import {StyleSheet, Button, Text, View} from 'react-native';
+import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
 import {useTranslation} from 'react-i18next';
+import {useTheme} from '../modules/theme/useTheme';
+import React from 'react';
 
-export default function NewsScreen({navigation}) {
+export default function NewsScreen({}) {
   const {t} = useTranslation();
 
+  const {Colors, selectTheme, changeTheme} = useTheme();
+  const styles = useStyles(Colors);
+
   return (
-    <View style={styles.container}>
-      <Text>{t('main.screens.news')}</Text>
-    </View>
+    <SafeAreaView style={[styles.container]}>
+      <View style={[styles.content]}>
+        <Text style={styles.titleText}>{t('main.screens.news')}</Text>
+      </View>
+    </SafeAreaView>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  bottom: {
-    flex: 1,
-    justifyContent: 'flex-end',
-  },
-  btn: {
-    width: '100%',
-    height: 50,
-    backgroundColor: 'red',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+const useStyles = colors =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      alignItems: 'center',
+      backgroundColor: colors.backgroundPrimary,
+    },
+    content: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    titleText: {
+      color: colors.textPrimary,
+      fontSize: 20,
+    },
+  });

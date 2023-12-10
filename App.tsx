@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import { Button, Linking, Text, TouchableOpacity } from "react-native";
+import {Linking} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
@@ -10,13 +10,34 @@ import HomeScreen from './screens/HomeScreen';
 import Navigation from './navigation/Navigation';
 import {DeepLinking} from './navigation/DeepLinking';
 import {useTranslation} from 'react-i18next';
+import {useTheme} from './modules/theme/useTheme';
+import {ThemeProvider} from './modules/theme/ThemeProvider';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 const TabNavigation = () => {
+  const {Colors} = useTheme();
+  const colors = Colors;
   const {t} = useTranslation();
   return (
-    <Tab.Navigator>
+    <Tab.Navigator
+      screenOptions={{
+        tabBarActiveTintColor: colors.accentPrimary,
+        tabBarInactiveTintColor: colors.accentSecondary,
+        headerStyle: {backgroundColor: colors.overlay},
+        headerTitleStyle: {
+          color: colors.textPrimary,
+        },
+        headerShadowVisible: false,
+        tabBarStyle: {
+          backgroundColor: colors.overlay,
+          height: 60,
+          paddingBottom: 10,
+          paddingTop: 10,
+          elevation: 0,
+          borderTopWidth: 0,
+        },
+      }}>
       <Tab.Screen
         name="Home"
         component={HomeStack}
@@ -52,10 +73,7 @@ const TabNavigation = () => {
 const HomeStack = () => {
   return (
     <Stack.Navigator>
-      <Stack.Screen
-        name={'HomeScreen'}
-        component={HomeScreen}
-      />
+      <Stack.Screen name={'HomeScreen'} component={HomeScreen} />
     </Stack.Navigator>
   );
 };
@@ -70,17 +88,19 @@ const App = () => {
   }, []);
 
   return (
-    <NavigationContainer
-      linking={DeepLinking.linking}
-      ref={Navigation.navigationRef}>
-      <Stack.Navigator>
-        <Stack.Screen
-          name={'Tab'}
-          component={TabNavigation}
-          options={{headerShown: false}}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <ThemeProvider>
+      <NavigationContainer
+        linking={DeepLinking.linking}
+        ref={Navigation.navigationRef}>
+        <Stack.Navigator>
+          <Stack.Screen
+            name={'Tab'}
+            component={TabNavigation}
+            options={{headerShown: false}}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </ThemeProvider>
   );
 };
 

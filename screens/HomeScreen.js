@@ -1,3 +1,8 @@
+import React, {useEffect, useState} from 'react';
+import {useTranslation} from 'react-i18next';
+import {LangType} from '../modules/lang/LangType';
+import {useRootStore} from '../hooks/useRootStore';
+import {observer} from 'mobx-react';
 import {
   StyleSheet,
   Text,
@@ -7,58 +12,83 @@ import {
   ActivityIndicator,
   ScrollView,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
-import {useTranslation} from 'react-i18next';
-import {useRootStore} from '../hooks/useRootStore';
-import {LangType} from '../modules/lang/LangType';
+import {useTheme} from '../modules/theme/useTheme';
+import {ThemeTypes} from '../modules/theme/ThemeTypes';
 
-export default function HomeScreen({navigation}) {
+const HomeScreen = observer(({navigation}) => {
   const {langStore} = useRootStore();
   const {t} = useTranslation();
+
+  const {Colors, selectTheme, changeTheme} = useTheme();
+  const styles = useStyles(Colors);
 
   useEffect(() => {
     langStore.getLang();
   }, []);
 
+  console.log(langStore.lang);
   const handleChangeLang = async () => {
     await langStore.changeLang(
       LangType.RU === langStore.lang ? LangType.EN : LangType.RU,
     );
   };
 
+  const handleChangeTheme = async () => {
+    changeTheme(
+      selectTheme === ThemeTypes.LIGHT ? ThemeTypes.DARK : ThemeTypes.LIGHT,
+    );
+  };
+
   return (
     <SafeAreaView style={[styles.container]}>
-      <TouchableOpacity
-        style={[styles.lang_btn]}
-        onPress={() => handleChangeLang()}>
-        <Text>{t('main.screens.home.button')}</Text>
-      </TouchableOpacity>
       <View style={[styles.content]}>
-        <Text>{t('main.screens.home.title')}</Text>
+        <Text style={styles.titleText}>{t('main.screens.home.title')}</Text>
       </View>
     </SafeAreaView>
   );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  lang_btn: {
-    width: '100%',
-    height: 50,
-    backgroundColor: '#FADDE1',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  btn: {
-    width: '100%',
-    height: 50,
-    backgroundColor: 'red',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
 });
+
+const useStyles = colors =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      alignItems: 'center',
+      backgroundColor: colors.backgroundPrimary,
+    },
+    content: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    buttonFirst: {
+      width: 160,
+      height: 50,
+      marginTop: 100,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: colors.buttonPrimary,
+    },
+    buttonSecond: {
+      width: 160,
+      height: 50,
+      marginTop: 30,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: colors.buttonSecondary,
+    },
+    titleText: {
+      color: colors.textPrimary,
+      fontSize: 20,
+    },
+    appButtonText: {
+      color: colors.textSecondary,
+      fontSize: 16,
+      textAlign: 'center',
+    },
+    loader: {
+      flex: 1,
+      alignContent: 'center',
+    },
+  });
+
+export default HomeScreen;

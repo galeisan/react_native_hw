@@ -1,32 +1,108 @@
-import {StyleSheet, Button, Text, View} from 'react-native';
+import React, {useEffect} from 'react';
 import {useTranslation} from 'react-i18next';
+import {LangType} from '../modules/lang/LangType';
+import {useRootStore} from '../hooks/useRootStore';
+import {observer} from 'mobx-react';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  SafeAreaView,
+} from 'react-native';
+import {useTheme} from '../modules/theme/useTheme';
+import {ThemeTypes} from '../modules/theme/ThemeTypes';
 
-export default function SettingsScreen({navigation}) {
+const SettingsScreen = observer(({navigation}) => {
+  const {langStore} = useRootStore();
   const {t} = useTranslation();
 
-  return (
-    <View style={styles.container}>
-      <Text>{t('main.screens.settings')}</Text>
-    </View>
-  );
-}
+  const {Colors, selectTheme, changeTheme} = useTheme();
+  const styles = useStyles(Colors);
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  bottom: {
-    flex: 1,
-    justifyContent: 'flex-end',
-  },
-  btn: {
-    width: '100%',
-    height: 50,
-    backgroundColor: 'red',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+  useEffect(() => {
+    langStore.getLang();
+  }, []);
+
+  console.log(langStore.lang);
+  const handleChangeLang = async () => {
+    await langStore.changeLang(
+      LangType.RU === langStore.lang ? LangType.EN : LangType.RU,
+    );
+  };
+
+  const handleChangeTheme = async () => {
+    changeTheme(
+      selectTheme === ThemeTypes.LIGHT ? ThemeTypes.DARK : ThemeTypes.LIGHT,
+    );
+  };
+
+  return (
+    <SafeAreaView style={[styles.container]}>
+      <View style={[styles.content]}>
+        <Text style={styles.titleText}>{t('main.screens.settings.title')}</Text>
+        <TouchableOpacity
+          style={[styles.buttonFirst]}
+          onPress={() => handleChangeLang()}>
+          <Text style={styles.appButtonText}>
+            {t('main.screens.settings.buttonLanguage')}
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.buttonSecond]}
+          onPress={() => handleChangeTheme()}>
+          <Text style={styles.appButtonText}>
+            {t('main.screens.settings.buttonTheme')}
+          </Text>
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
+  );
 });
+
+const useStyles = colors =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      alignItems: 'center',
+      backgroundColor: colors.backgroundPrimary,
+    },
+    content: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    buttonFirst: {
+      width: 160,
+      height: 50,
+      marginTop: 100,
+      borderRadius: 8,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: colors.buttonPrimary,
+    },
+    buttonSecond: {
+      width: 160,
+      height: 50,
+      marginTop: 30,
+      borderRadius: 8,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: colors.buttonSecondary,
+    },
+    titleText: {
+      color: colors.textPrimary,
+      fontSize: 20,
+    },
+    appButtonText: {
+      color: colors.textSecondary,
+      fontSize: 16,
+      textAlign: 'center',
+    },
+    loader: {
+      flex: 1,
+      alignContent: 'center',
+    },
+  });
+
+export default SettingsScreen;
