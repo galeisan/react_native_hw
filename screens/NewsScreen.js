@@ -33,5 +33,6 @@ const useStyles = colors =>
     titleText: {
       color: colors.textPrimary,
       fontSize: 20,
+      fontFamily: 'Lobster-Regular',
     },
   });

@@ -93,11 +93,13 @@ const useStyles = colors =>
     titleText: {
       color: colors.textPrimary,
       fontSize: 20,
+      fontFamily: 'Lobster-Regular',
     },
     appButtonText: {
       color: colors.textSecondary,
       fontSize: 16,
       textAlign: 'center',
+      fontFamily: 'Lobster-Regular',
     },
     loader: {
       flex: 1,

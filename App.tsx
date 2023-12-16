@@ -27,6 +27,7 @@ const TabNavigation = () => {
         headerStyle: {backgroundColor: colors.overlay},
         headerTitleStyle: {
           color: colors.textPrimary,
+          fontFamily: 'Lobster-Regular',
         },
         headerShadowVisible: false,
         tabBarStyle: {
@@ -36,6 +37,9 @@ const TabNavigation = () => {
           paddingTop: 10,
           elevation: 0,
           borderTopWidth: 0,
+        },
+        tabBarLabelStyle: {
+          fontFamily: 'Lobster-Regular',
         },
       }}>
       <Tab.Screen
